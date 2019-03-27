@@ -27,7 +27,7 @@ const ball = {
 }
 
 // User Paddle
-const user = {
+const user1 = {
     x : 0, // left side of canvas
     y : (canvas.height - 100)/2, // -100 the height of paddle
     width : 10,
@@ -37,7 +37,7 @@ const user = {
 }
 
 // COM Paddle
-const com = {
+const user2 = {
     x : canvas.width - 10, // - width of paddle
     y : (canvas.height - 100)/2, // -100 the height of paddle
     width : 10,
@@ -76,7 +76,7 @@ canvas.addEventListener("mousemove", getMousePos);
 function getMousePos(evt){
     let rect = canvas.getBoundingClientRect();
     
-    user.y = evt.clientY - rect.top - user.height/2;
+    user1.y = evt.clientY - rect.top - user1.height/2;
 }
 
 // when COM or USER scores, we reset the ball
@@ -121,12 +121,12 @@ function update(){
     
     // change the score of players, if the ball goes to the left "ball.x<0" computer win, else if "ball.x > canvas.width" the user win
     if( ball.x - ball.radius < 0 ){
-        com.score++;
-        comScore.play();
+        user2.score++;
+        user2Score.play();
         resetBall();
     }else if( ball.x + ball.radius > canvas.width){
-        user.score++;
-        userScore.play();
+        user1.score++;
+        user1Score.play();
         resetBall();
     }
     
@@ -136,7 +136,7 @@ function update(){
     
     // computer plays for itself, and we must be able to beat it
     // simple AI
-    com.y += ((ball.y - (com.y + com.height/2)))*0.1;
+    user2.y += ((ball.y - (user2.y + user2.height/2)))*0.1;
     
     // when the ball collides with bottom and top walls we inverse the y velocity.
     if(ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height){
@@ -145,7 +145,7 @@ function update(){
     }
     
     // we check if the paddle hit the user or the com paddle
-    let player = (ball.x + ball.radius < canvas.width/2) ? user : com;
+    let player = (ball.x + ball.radius < canvas.width/2) ? user1 : user2;
     
     // if the ball hits a paddle
     if(collision(ball,player)){
@@ -180,19 +180,19 @@ function render(){
     drawRect(0, 0, canvas.width, canvas.height, "#000");
     
     // draw the user score to the left
-    drawText(user.score,canvas.width/4,canvas.height/5);
+    drawText(user1.score,canvas.width/4,canvas.height/5);
     
     // draw the COM score to the right
-    drawText(com.score,3*canvas.width/4,canvas.height/5);
+    drawText(user2.score,3*canvas.width/4,canvas.height/5);
     
     // draw the net
     drawNet();
     
     // draw the user's paddle
-    drawRect(user.x, user.y, user.width, user.height, user.color);
+    drawRect(user1.x, user1.y, user1.width, user1.height, user1.color);
     
     // draw the COM's paddle
-    drawRect(com.x, com.y, com.width, com.height, com.color);
+    drawRect(user2.x, user2.y, user2.width, user2.height, user2.color);
     
     // draw the ball
     drawArc(ball.x, ball.y, ball.radius, ball.color);
